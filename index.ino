@@ -22,7 +22,7 @@
 #define DPY_9 9
 //? number displayed on lcd
 
-#define DPY_SPEED 400
+#define DPY_SPEED 100
 //? controls how long to wait when loop() finishes
 //? basically display frame rate
 
