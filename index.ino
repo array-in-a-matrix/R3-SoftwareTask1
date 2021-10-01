@@ -83,32 +83,7 @@ void loop()
 	to_display(tens_digit, TENS_BIN_DGT_1, TENS_BIN_DGT_2, TENS_BIN_DGT_3, TENS_BIN_DGT_4);
 	//? display the digits in their respective order
 
-	/*
-	 * for (int i = 0; i, 9; i++)
-	 * {
-	 * 	for (int j = 0; j < 9; j++)
-	 * 	{
-	 * 		anal_data = analogRead(ANAL_PIN); //? potentiometer range: [0,1023]
-	 * 		// Serial.println(anal_data);
-	 * 		double scaled_data = anal_data / 10.23;
-	 * 		// Serial.println(scaled_data);
 
-	 * 		counter_ones++;
-	 * 		to_display_1(counter_ones);
-	 * 		delay(400);
-	 * 	};
-	 * 	counter_ones = 0;
-	 * 	to_display_1(counter_ones);
-
-	 * 	counter_tens++;
-	 * 	to_display_2(counter_tens);
-	 * 	delay(400);
-	 * };
-	 * counter_tens = 0;
-	 * to_display_2(counter_tens);
-	 */
-	//? counts from 0 to 99 then loops
-	//? uneeded code used for testing
 
 	delay(DPY_SPEED);
 };
@@ -119,25 +94,6 @@ void split_digit(int num, int *tens, int *ones)
 	*ones = num % 10;
 	*tens = (num / 10) % 10;
 };
-
-/*
- * long dec_to_bin(int decimal)
- * {
- * 	long binary = 0;
- * 	int remainder;
- * 	long f = 1;
- * 	while (decimal != 0)
- * 	{
- * 		remainder = decimal % 2;
- * 		binary = binary + remainder * f;
- * 		f = f * 10;
- * 		decimal = decimal / 2;
- * 	}
- * 	return binary;
- * };
- */
-//? converts decimal number to a binary representation
-//? I thought i needed this
 
 void to_display(int num, int pin_1, int pin_2, int pin_3, int pin_4)
 {
