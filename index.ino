@@ -1,213 +1,215 @@
-#define ones_bin_dgt_1 2
-#define ones_bin_dgt_2 3
-#define ones_bin_dgt_3 4
-#define ones_bin_dgt_4 5
+#define ONES_BIN_DGT_1 2
+#define ONES_BIN_DGT_2 3
+#define ONES_BIN_DGT_3 4
+#define ONES_BIN_DGT_4 5
 
-#define tens_bin_dgt_1 8
-#define tens_bin_dgt_2 9
-#define tens_bin_dgt_3 10
-#define tens_bin_dgt_4 11
-#define anal_pin 0
+#define TENS_BIN_DGT_1 8
+#define TENS_BIN_DGT_2 9
+#define TENS_BIN_DGT_3 10
+#define TENS_BIN_DGT_4 11
 
-int counter_ones, counter_tens, anal_data = 0;
+#define ANAL_PIN 0
+//? giving pin numbers a name
+
+#define DPY_1 1
+#define DPY_2 2
+#define DPY_3 3
+#define DPY_4 4
+#define DPY_5 5
+#define DPY_6 6
+#define DPY_7 7
+#define DPY_8 8
+#define DPY_9 9
+//? number displayed on lcd
+
+double anal_data;
+//? initialization of the analog variable
+//? keeps track of the voltage from the potentiometer
 
 void setup();
 void loop();
-void to_display(int number);
-void to_display_2(int number);
+void to_display(long number, int pin_1, int pin_2, int pin_3, int pin_4);
+long dec_to_bin(int decimal);
+//? function initialization
 
 void setup()
 {
-	Serial.begin(9600);
-	pinMode(ones_bin_dgt_1, OUTPUT);
-	pinMode(ones_bin_dgt_2, OUTPUT);
-	pinMode(ones_bin_dgt_3, OUTPUT);
-	pinMode(ones_bin_dgt_4, OUTPUT);
-	
-	pinMode(tens_bin_dgt_1, OUTPUT);
-	pinMode(tens_bin_dgt_2, OUTPUT);
-	pinMode(tens_bin_dgt_3, OUTPUT);
-	pinMode(tens_bin_dgt_4, OUTPUT);
+	Serial.begin(9600); //! idk what this does
+
+	pinMode(ONES_BIN_DGT_1, OUTPUT);
+	pinMode(ONES_BIN_DGT_2, OUTPUT);
+	pinMode(ONES_BIN_DGT_3, OUTPUT);
+	pinMode(ONES_BIN_DGT_4, OUTPUT);
+
+	pinMode(TENS_BIN_DGT_1, OUTPUT);
+	pinMode(TENS_BIN_DGT_2, OUTPUT);
+	pinMode(TENS_BIN_DGT_3, OUTPUT);
+	pinMode(TENS_BIN_DGT_4, OUTPUT);
+
+	pinMode(ANAL_PIN, INPUT);
 	// delay(1000);
 };
+//? tells arduino we will be outputing voltage through digital pins 2,3,4,5,8,9,10,11
+//? and recive data from analog pin 0
 
 void loop()
 {
-	anal_data = analogRead(anal_pin);
-	// Serial.println(anal_data);
+	anal_data = analogRead(ANAL_PIN); //? potentiometer range: [0,1023]
+	//? reads analog voltage from potentiometer
 
-	for (int i = 0; i, 9; i++)
+	double scaled_data = (double)anal_data / 10.23; //TODO: replace number with a defined name
+	//? scales the analog voltage values from [0,1023] to [0,100]
+
+	scaled_data = round(scaled_data);
+	//? round the scaled value for better accuracy
+
+	// long bin_data = dec_to_bin((int)scaled_data);
+	// //? converts scaled potentiometer value to a binary value
+
+	if (scaled_data == 100)
 	{
-		for (int j = 0; j < 9; j++)
-		{
-			counter_ones++;
-			// Serial.println(counter_ones);
-			to_display(counter_ones);
-			delay(1000);
-		};
-		counter_ones = 0;
-		to_display(counter_ones);
-		Serial.println(counter_ones);
+		scaled_data = 99;
+	}
 
-		counter_tens++;
-		to_display_2(counter_tens);
-		delay(1000);
-	};
-	counter_tens = 0;
-	to_display_2(counter_tens);
-	Serial.println(counter_tens);
+	int tens_digit, ones_digit;
+	split_digit(scaled_data, &tens_digit, &ones_digit);
+	Serial.print(tens_digit);
+	Serial.print(ones_digit); //! always an even number ??
+	Serial.println();
 
-	delay(1000);
+	to_display(ones_digit, ONES_BIN_DGT_1, ONES_BIN_DGT_2, ONES_BIN_DGT_3, ONES_BIN_DGT_4);
+	to_display(tens_digit, TENS_BIN_DGT_1, TENS_BIN_DGT_2, TENS_BIN_DGT_3, TENS_BIN_DGT_4);
+	//? display the digits in their respective order
+
+	/*
+	* for (int i = 0; i, 9; i++)
+	* {
+	* 	for (int j = 0; j < 9; j++)
+	* 	{
+	* 		anal_data = analogRead(ANAL_PIN); //? potentiometer range: [0,1023]
+	* 		// Serial.println(anal_data);
+	* 		double scaled_data = anal_data / 10.23;
+	* 		// Serial.println(scaled_data);
+
+	* 		counter_ones++;
+	* 		to_display_1(counter_ones);
+	* 		delay(400);
+	* 	};
+	* 	counter_ones = 0;
+	* 	to_display_1(counter_ones);
+
+	* 	counter_tens++;
+	* 	to_display_2(counter_tens);
+	* 	delay(400);
+	* };
+	* counter_tens = 0;
+	* to_display_2(counter_tens);
+	*/
+	//? counts from 0 to 99 then loops
+	//? uneeded code used for testing
+
+	delay(1000); //TODO: replace number with a defined name
+};
+//? main event loop
+
+void split_digit(int num, int *tens, int *ones)
+{
+	*ones = num % 10; 
+	*tens = ( num / 10 ) % 10;
 };
 
-void to_display(int number)
+long dec_to_bin(int decimal)
 {
-	switch (number)
+	long binary = 0;
+	int remainder;
+	long f = 1;
+	while (decimal != 0)
 	{
-	case 1:
-		digitalWrite(ones_bin_dgt_1, HIGH);
-		digitalWrite(ones_bin_dgt_2, LOW);
-		digitalWrite(ones_bin_dgt_3, LOW);
-		digitalWrite(ones_bin_dgt_4, LOW);
+		remainder = decimal % 2;
+		binary = binary + remainder * f;
+		f = f * 10;
+		decimal = decimal / 2;
+	}
+	return binary;
+};
+//? converts decimal number to a binary representation
+
+void to_display(int num, int pin_1, int pin_2, int pin_3, int pin_4)
+{
+
+	switch (num)
+	{
+	case DPY_1:
+		digitalWrite(pin_1, HIGH);
+		digitalWrite(pin_2, LOW);
+		digitalWrite(pin_3, LOW);
+		digitalWrite(pin_4, LOW);
 		break;
 
-	case 2:
-		digitalWrite(ones_bin_dgt_1, LOW);
-		digitalWrite(ones_bin_dgt_2, HIGH);
-		digitalWrite(ones_bin_dgt_3, LOW);
-		digitalWrite(ones_bin_dgt_4, LOW);
+	case DPY_2:
+		digitalWrite(pin_1, LOW);
+		digitalWrite(pin_2, HIGH);
+		digitalWrite(pin_3, LOW);
+		digitalWrite(pin_4, LOW);
 		break;
 
-	case 3:
-		digitalWrite(ones_bin_dgt_1, HIGH);
-		digitalWrite(ones_bin_dgt_2, HIGH);
-		digitalWrite(ones_bin_dgt_3, LOW);
-		digitalWrite(ones_bin_dgt_4, LOW);
+	case DPY_3:
+		digitalWrite(pin_1, HIGH);
+		digitalWrite(pin_2, HIGH);
+		digitalWrite(pin_3, LOW);
+		digitalWrite(pin_4, LOW);
 		break;
 
-	case 4:
-		digitalWrite(ones_bin_dgt_1, LOW);
-		digitalWrite(ones_bin_dgt_2, LOW);
-		digitalWrite(ones_bin_dgt_3, HIGH);
-		digitalWrite(ones_bin_dgt_4, LOW);
+	case DPY_4:
+		digitalWrite(pin_1, LOW);
+		digitalWrite(pin_2, LOW);
+		digitalWrite(pin_3, HIGH);
+		digitalWrite(pin_4, LOW);
 		break;
 
-	case 5:
-		digitalWrite(ones_bin_dgt_1, HIGH);
-		digitalWrite(ones_bin_dgt_2, LOW);
-		digitalWrite(ones_bin_dgt_3, HIGH);
-		digitalWrite(ones_bin_dgt_4, LOW);
+	case DPY_5:
+		digitalWrite(pin_1, HIGH);
+		digitalWrite(pin_2, LOW);
+		digitalWrite(pin_3, HIGH);
+		digitalWrite(pin_4, LOW);
 		break;
 
-	case 6:
-		digitalWrite(ones_bin_dgt_1, LOW);
-		digitalWrite(ones_bin_dgt_2, HIGH);
-		digitalWrite(ones_bin_dgt_3, HIGH);
-		digitalWrite(ones_bin_dgt_4, LOW);
+	case DPY_6:
+		digitalWrite(pin_1, LOW);
+		digitalWrite(pin_2, HIGH);
+		digitalWrite(pin_3, HIGH);
+		digitalWrite(pin_4, LOW);
 		break;
 
-	case 7:
-		digitalWrite(ones_bin_dgt_1, HIGH);
-		digitalWrite(ones_bin_dgt_2, HIGH);
-		digitalWrite(ones_bin_dgt_3, HIGH);
-		digitalWrite(ones_bin_dgt_4, LOW);
+	case DPY_7:
+		digitalWrite(pin_1, HIGH);
+		digitalWrite(pin_2, HIGH);
+		digitalWrite(pin_3, HIGH);
+		digitalWrite(pin_4, LOW);
 		break;
 
-	case 8:
-		digitalWrite(ones_bin_dgt_1, LOW);
-		digitalWrite(ones_bin_dgt_2, LOW);
-		digitalWrite(ones_bin_dgt_3, LOW);
-		digitalWrite(ones_bin_dgt_4, HIGH);
+	case DPY_8:
+		digitalWrite(pin_1, LOW);
+		digitalWrite(pin_2, LOW);
+		digitalWrite(pin_3, LOW);
+		digitalWrite(pin_4, HIGH);
 		break;
 
-	case 9:
-		digitalWrite(ones_bin_dgt_1, HIGH);
-		digitalWrite(ones_bin_dgt_2, LOW);
-		digitalWrite(ones_bin_dgt_3, LOW);
-		digitalWrite(ones_bin_dgt_4, HIGH);
+	case DPY_9:
+		digitalWrite(pin_1, HIGH);
+		digitalWrite(pin_2, LOW);
+		digitalWrite(pin_3, LOW);
+		digitalWrite(pin_4, HIGH);
 		break;
 
 	default:
-		digitalWrite(ones_bin_dgt_1, LOW);
-		digitalWrite(ones_bin_dgt_2, LOW);
-		digitalWrite(ones_bin_dgt_3, LOW);
-		digitalWrite(ones_bin_dgt_4, LOW);
+		digitalWrite(pin_1, LOW);
+		digitalWrite(pin_2, LOW);
+		digitalWrite(pin_3, LOW);
+		digitalWrite(pin_4, LOW);
 		break;
 	}
 };
-
-void to_display_2(int number)
-{
-	switch (number)
-	{
-	case 1:
-		digitalWrite(tens_bin_dgt_1, HIGH);
-		digitalWrite(tens_bin_dgt_2, LOW);
-		digitalWrite(tens_bin_dgt_3, LOW);
-		digitalWrite(tens_bin_dgt_4, LOW);
-		break;
-
-	case 2:
-		digitalWrite(tens_bin_dgt_1, LOW);
-		digitalWrite(tens_bin_dgt_2, HIGH);
-		digitalWrite(tens_bin_dgt_3, LOW);
-		digitalWrite(tens_bin_dgt_4, LOW);
-		break;
-
-	case 3:
-		digitalWrite(tens_bin_dgt_1, HIGH);
-		digitalWrite(tens_bin_dgt_2, HIGH);
-		digitalWrite(tens_bin_dgt_3, LOW);
-		digitalWrite(tens_bin_dgt_4, LOW);
-		break;
-
-	case 4:
-		digitalWrite(tens_bin_dgt_1, LOW);
-		digitalWrite(tens_bin_dgt_2, LOW);
-		digitalWrite(tens_bin_dgt_3, HIGH);
-		digitalWrite(tens_bin_dgt_4, LOW);
-		break;
-
-	case 5:
-		digitalWrite(tens_bin_dgt_1, HIGH);
-		digitalWrite(tens_bin_dgt_2, LOW);
-		digitalWrite(tens_bin_dgt_3, HIGH);
-		digitalWrite(tens_bin_dgt_4, LOW);
-		break;
-
-	case 6:
-		digitalWrite(tens_bin_dgt_1, LOW);
-		digitalWrite(tens_bin_dgt_2, HIGH);
-		digitalWrite(tens_bin_dgt_3, HIGH);
-		digitalWrite(tens_bin_dgt_4, LOW);
-		break;
-
-	case 7:
-		digitalWrite(tens_bin_dgt_1, HIGH);
-		digitalWrite(tens_bin_dgt_2, HIGH);
-		digitalWrite(tens_bin_dgt_3, HIGH);
-		digitalWrite(tens_bin_dgt_4, LOW);
-		break;
-
-	case 8:
-		digitalWrite(tens_bin_dgt_1, LOW);
-		digitalWrite(tens_bin_dgt_2, LOW);
-		digitalWrite(tens_bin_dgt_3, LOW);
-		digitalWrite(tens_bin_dgt_4, HIGH);
-		break;
-
-	case 9:
-		digitalWrite(tens_bin_dgt_1, HIGH);
-		digitalWrite(tens_bin_dgt_2, LOW);
-		digitalWrite(tens_bin_dgt_3, LOW);
-		digitalWrite(tens_bin_dgt_4, HIGH);
-		break;
-
-	default:
-		digitalWrite(tens_bin_dgt_1, LOW);
-		digitalWrite(tens_bin_dgt_2, LOW);
-		digitalWrite(tens_bin_dgt_3, LOW);
-		digitalWrite(tens_bin_dgt_4, LOW);
-		break;
-	}
-};
+//? converts binary numbers to decimal digits on LCD
+//TODO probably dont need the `number` variable
+//TODO derive needed number using binary values?
