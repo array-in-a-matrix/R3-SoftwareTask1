@@ -22,6 +22,10 @@
 #define DPY_9 9
 //? number displayed on lcd
 
+#define DPY_SPEED 400
+//? controls how long to wait when loop() finishes
+//? basically display frame rate
+
 double anal_data;
 //? initialization of the analog variable
 //? keeps track of the voltage from the potentiometer
@@ -29,7 +33,7 @@ double anal_data;
 void setup();
 void loop();
 void to_display(long number, int pin_1, int pin_2, int pin_3, int pin_4);
-long dec_to_bin(int decimal);
+void split_digit(int num, int *tens, int *ones);
 //? function initialization
 
 void setup()
@@ -63,80 +67,80 @@ void loop()
 	scaled_data = round(scaled_data);
 	//? round the scaled value for better accuracy
 
-	// long bin_data = dec_to_bin((int)scaled_data);
-	// //? converts scaled potentiometer value to a binary value
-
 	if (scaled_data == 100)
 	{
 		scaled_data = 99;
 	}
+	//? set max value to be 99
+	//? since display can not show integers with more than 2 digits
 
 	int tens_digit, ones_digit;
 	split_digit(scaled_data, &tens_digit, &ones_digit);
 	Serial.print(tens_digit);
-	Serial.print(ones_digit); //! always an even number ??
-	Serial.println();
+	Serial.println(ones_digit); //! always an even number ??
 
 	to_display(ones_digit, ONES_BIN_DGT_1, ONES_BIN_DGT_2, ONES_BIN_DGT_3, ONES_BIN_DGT_4);
 	to_display(tens_digit, TENS_BIN_DGT_1, TENS_BIN_DGT_2, TENS_BIN_DGT_3, TENS_BIN_DGT_4);
 	//? display the digits in their respective order
 
 	/*
-	* for (int i = 0; i, 9; i++)
-	* {
-	* 	for (int j = 0; j < 9; j++)
-	* 	{
-	* 		anal_data = analogRead(ANAL_PIN); //? potentiometer range: [0,1023]
-	* 		// Serial.println(anal_data);
-	* 		double scaled_data = anal_data / 10.23;
-	* 		// Serial.println(scaled_data);
+	 * for (int i = 0; i, 9; i++)
+	 * {
+	 * 	for (int j = 0; j < 9; j++)
+	 * 	{
+	 * 		anal_data = analogRead(ANAL_PIN); //? potentiometer range: [0,1023]
+	 * 		// Serial.println(anal_data);
+	 * 		double scaled_data = anal_data / 10.23;
+	 * 		// Serial.println(scaled_data);
 
-	* 		counter_ones++;
-	* 		to_display_1(counter_ones);
-	* 		delay(400);
-	* 	};
-	* 	counter_ones = 0;
-	* 	to_display_1(counter_ones);
+	 * 		counter_ones++;
+	 * 		to_display_1(counter_ones);
+	 * 		delay(400);
+	 * 	};
+	 * 	counter_ones = 0;
+	 * 	to_display_1(counter_ones);
 
-	* 	counter_tens++;
-	* 	to_display_2(counter_tens);
-	* 	delay(400);
-	* };
-	* counter_tens = 0;
-	* to_display_2(counter_tens);
-	*/
+	 * 	counter_tens++;
+	 * 	to_display_2(counter_tens);
+	 * 	delay(400);
+	 * };
+	 * counter_tens = 0;
+	 * to_display_2(counter_tens);
+	 */
 	//? counts from 0 to 99 then loops
 	//? uneeded code used for testing
 
-	delay(1000); //TODO: replace number with a defined name
+	delay(DPY_SPEED);
 };
 //? main event loop
 
 void split_digit(int num, int *tens, int *ones)
 {
-	*ones = num % 10; 
-	*tens = ( num / 10 ) % 10;
+	*ones = num % 10;
+	*tens = (num / 10) % 10;
 };
 
-long dec_to_bin(int decimal)
-{
-	long binary = 0;
-	int remainder;
-	long f = 1;
-	while (decimal != 0)
-	{
-		remainder = decimal % 2;
-		binary = binary + remainder * f;
-		f = f * 10;
-		decimal = decimal / 2;
-	}
-	return binary;
-};
+/*
+ * long dec_to_bin(int decimal)
+ * {
+ * 	long binary = 0;
+ * 	int remainder;
+ * 	long f = 1;
+ * 	while (decimal != 0)
+ * 	{
+ * 		remainder = decimal % 2;
+ * 		binary = binary + remainder * f;
+ * 		f = f * 10;
+ * 		decimal = decimal / 2;
+ * 	}
+ * 	return binary;
+ * };
+ */
 //? converts decimal number to a binary representation
+//? I thought i needed this
 
 void to_display(int num, int pin_1, int pin_2, int pin_3, int pin_4)
 {
-
 	switch (num)
 	{
 	case DPY_1:
@@ -211,5 +215,4 @@ void to_display(int num, int pin_1, int pin_2, int pin_3, int pin_4)
 	}
 };
 //? converts binary numbers to decimal digits on LCD
-//TODO probably dont need the `number` variable
-//TODO derive needed number using binary values?
+//? i feel like this can be done more elegently with binary manipulation
