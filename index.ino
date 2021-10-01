@@ -8,7 +8,7 @@
 #define TENS_BIN_DGT_3 10
 #define TENS_BIN_DGT_4 11
 
-#define ANAL_PIN 0
+#define ANALOG_PIN 0
 //? giving pin numbers a name
 
 #define DPY_1 1
@@ -26,7 +26,7 @@
 //? controls how long to wait when loop() finishes
 //? basically display frame rate
 
-double anal_data;
+double analog_data;
 //? initialization of the analog variable
 //? keeps track of the voltage from the potentiometer
 
@@ -50,7 +50,7 @@ void setup()
 	pinMode(TENS_BIN_DGT_3, OUTPUT);
 	pinMode(TENS_BIN_DGT_4, OUTPUT);
 
-	pinMode(ANAL_PIN, INPUT);
+	pinMode(ANALOG_PIN, INPUT);
 	// delay(1000);
 };
 //? tells arduino we will be outputing voltage through digital pins 2,3,4,5,8,9,10,11
@@ -58,10 +58,10 @@ void setup()
 
 void loop()
 {
-	anal_data = analogRead(ANAL_PIN); //? potentiometer range: [0,1023]
+	analog_data = analogRead(ANALOG_PIN); //? potentiometer range: [0,1023]
 	//? reads analog voltage from potentiometer
 
-	double scaled_data = (double)anal_data / 10.23; //TODO: replace number with a defined name
+	double scaled_data = (double)analog_data / 10.23; //TODO: replace number with a defined name
 	//? scales the analog voltage values from [0,1023] to [0,100]
 
 	scaled_data = round(scaled_data);
