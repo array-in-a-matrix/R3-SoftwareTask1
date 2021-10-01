@@ -1,5 +1,6 @@
-//! random leftover from testing / uneeded code
-
+//! removing these from the main file increased
+//!  preformance in the tinkercad webapp!
+//! random leftover from testing / uneeded code:
 /*
 * for (int i = 0; i, 9; i++)
 * {
