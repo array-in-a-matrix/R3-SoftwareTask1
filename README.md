@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # R3 Software Task 1
 <img src="src/circuit.png"/>
 
@@ -49,4 +50,4 @@ void to_display(int num, int pin_1, int pin_2, int pin_3, int pin_4)
 
 ## Reflection
 
-This is my first time using an Arduino and programming in Arduino Programming Language \**cough*\* C++ *\*Ahm\**. I don't know C++ so I just wrote code as if it was C (and it worked!). The code controls both displays separately, however its possible to wire the displays in a way such that when the first displays passes 9 the next display increments by 1, I don't know how to do that though. I had some difficulty deciding how to control the displays because I think its probably possible to use a series of binary operations to control what LEDs are on within a display. If it's possible it would simplify the long switch statement in the `to_display` function. 
+This is my first time using an Arduino and programming in Arduino Programming Language \**cough*\* C++ *\*Ahm\**. I don't know C++ so I just wrote code as if it was C (and it worked!). The code controls both displays separately, however its possible to wire the displays in a way such that when the first displays passes 9 the next display increments by 1, I don't know how to do that though. I had some difficulty deciding how to control the displays because I think its probably possible to use a series of binary operations to control what LEDs are on within a display. If it's possible it would simplify the long switch statement in the `to_display` function.
