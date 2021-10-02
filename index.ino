@@ -26,6 +26,9 @@
 //? controls how long to wait when loop() finishes
 //? basically display frame rate
 
+#define BAUD_RATE 9600
+#define SCALE_FACTOR 10.23
+
 double analog_data;
 //? initialization of the analog variable
 //? keeps track of the voltage from the potentiometer
@@ -38,7 +41,7 @@ void split_digit(int num, int *tens, int *ones);
 
 void setup()
 {
-	Serial.begin(9600); //! idk what this does
+	Serial.begin(BAUD_RATE); 
 
 	pinMode(ONES_BIN_DGT_1, OUTPUT);
 	pinMode(ONES_BIN_DGT_2, OUTPUT);
@@ -51,17 +54,16 @@ void setup()
 	pinMode(TENS_BIN_DGT_4, OUTPUT);
 
 	pinMode(ANALOG_PIN, INPUT);
-	// delay(1000);
 };
 //? tells arduino we will be outputing voltage through digital pins 2,3,4,5,8,9,10,11
-//? and recive data from analog pin 0
+//? and receive data from analog pin 0
 
 void loop()
 {
 	analog_data = analogRead(ANALOG_PIN); //? potentiometer range: [0,1023]
 	//? reads analog voltage from potentiometer
 
-	double scaled_data = (double)analog_data / 10.23; //TODO: replace number with a defined name
+	double scaled_data = (double) analog_data / SCALE_FACTOR;
 	//? scales the analog voltage values from [0,1023] to [0,100]
 
 	scaled_data = round(scaled_data);
@@ -83,17 +85,16 @@ void loop()
 	to_display(tens_digit, TENS_BIN_DGT_1, TENS_BIN_DGT_2, TENS_BIN_DGT_3, TENS_BIN_DGT_4);
 	//? display the digits in their respective order
 
-
-
 	delay(DPY_SPEED);
 };
-//? main event loop
+//? main event loop which runs indefinitely
 
 void split_digit(int num, int *tens, int *ones)
 {
 	*ones = num % 10;
 	*tens = (num / 10) % 10;
 };
+//? takes a number and splits its digits into separate variables
 
 void to_display(int num, int pin_1, int pin_2, int pin_3, int pin_4)
 {
@@ -170,5 +171,5 @@ void to_display(int num, int pin_1, int pin_2, int pin_3, int pin_4)
 		break;
 	}
 };
-//? converts binary numbers to decimal digits on LCD
-//? i feel like this can be done more elegently with binary manipulation
+//? takes decimal number then `converts it` to a binary value which the display can represent as a decimal value.
+//? i feel like this can be done more elegantly with binary manipulation.
