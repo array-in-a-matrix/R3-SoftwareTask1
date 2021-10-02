@@ -3,11 +3,15 @@
 
 The link to the board on [TinkerCAD](https://www.tinkercad.com/things/ivgo4v7VrjE).
 
+<br>
+
 ## Hardware
 
 The Arduino powers both `CD4511` display driver chips with 5v. Each display chip is wired to a `7 segment LCD`. The Arduino is connected to a potentiometer and reads its voltage from analog pin 0. The value read from the analog pin is then interpreted in software then sends out a signal to pins 2-5 and 8-11. The Arduino controls the displays using digital pins 2-5 to control the right LCD, and uses pins 8-11 to control the left LCD. The LCDs are common cathode displays. Each `CD4511`'s a-g pins are wired to their respective a-g `7 segment LCD` pins. The common pin (pin 8) is wired to a 400 Ω resistor which is then grounded. 
 
 <img src="src/demo.gif"/>
+
+<br>
 
 ## Software
 
@@ -40,6 +44,8 @@ void to_display(int num, int pin_1, int pin_2, int pin_3, int pin_4)
 		break;
     ...
 ```
+
+<br>
 
 ## Reflection
 
