@@ -1,5 +1,5 @@
-<<<<<<< HEAD
 # R3 Software Task 1
+
 <img src="src/circuit.png"/>
 
 The link to the board on [TinkerCAD](https://www.tinkercad.com/things/ivgo4v7VrjE).
