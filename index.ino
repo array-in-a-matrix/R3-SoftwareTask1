@@ -63,11 +63,8 @@ void loop()
 	analog_data = analogRead(ANALOG_PIN); //? potentiometer range: [0,1023]
 	//? reads analog voltage from potentiometer
 
-	double scaled_data = (double) analog_data / SCALE_FACTOR;
+	int scaled_data = (double) analog_data / SCALE_FACTOR;
 	//? scales the analog voltage values from [0,1023] to [0,100]
-
-	scaled_data = round(scaled_data);
-	//? round the scaled value for better accuracy
 
 	if (scaled_data == 100)
 	{
